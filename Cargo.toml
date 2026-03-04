@@ -1,0 +1,51 @@
+[package]
+name = "cipher-diary"
+version = "0.3.0"
+edition = "2021"
+description = "Encrypt every line of your journal and let an AI whisper the highlights—no server, just local privacy."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/cipher-diary"
+homepage = "https://cipher-diary.example.com"
+keywords = ["encryption", "journal", "summarization", "local-ai"]
+categories = ["command-line-utilities", "cryptography", "text-processing"]
+
+# Include the example journal and template files in the package
+include = [
+    "data/example.journal",
+    "templates/summaries.tmpl"
+]
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }          # Command line parsing
+serde = { version = "1.0", features = ["derive"] }          # Serialization / deserialization
+toml = "0.8"                                                # Configuration file format
+anyhow = "1.0"                                              # Error handling
+thiserror = "1.0"                                           # Custom error types
+rand = "0.8"                                                # Random number generation for IVs
+chacha20poly1305 = { version = "0.10", features = ["std"] }# Encryption algorithm (stream cipher)
+base64 = "0.21"                                             # Encode/decode ciphertext
+rust-bert = { version = "0.23", default-features = false, features = ["summarization","tokenizers"] }  # Local summarization model
+tokio = { version = "1.36", features = ["rt-multi-thread", "macros"] }                                 # Async runtime for model inference
+tera = "1.19"                                               # Templating engine for summary output
+
+[dev-dependencies]
+assert_cmd = "2.0"          # Integration tests for CLI
+predicates = "3.0"          # Assertions on command outputs
+tempfile = "3.10"           # Temporary files for testing
+
+# Example of a custom error type definition in the code:
+#   /// Errors that can occur during encryption or summarization.
+#   #[derive(Debug, thiserror::Error)]
+#   pub enum CipherDiaryError { ... }
+
+# The following comment contains the author's name once, as requested:
+# Author: Myroslav Mokhammad Abdeljawwad
+
+[features]
+default = ["summarize"]
+summarize = []                    # Enable summarization feature (includes rust-bert dependencies)
+
+[workspace]  # Allows future sub-crates if needed
+members = []
+
+# Note: The Cargo.lock file will lock the exact versions used during a successful build.
