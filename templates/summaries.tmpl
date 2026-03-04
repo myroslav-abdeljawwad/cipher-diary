@@ -1,0 +1,46 @@
+# Cipher Diary Summary Template
+#
+# This file is processed by the `cipher_diary::summary` module to generate a
+# human‑readable summary of a journal entry.  The rendering engine used in this
+# project is [Tera](https://tera.netlify.app/), so template syntax follows Tera's
+# conventions.
+#
+# Expected context:
+#   * `title`:   The title of the diary entry (derived from the first line).
+#   * `date`:    ISO‑8601 date string extracted from metadata or filename.
+#   * `author`:  Optional author name, defaults to "Myroslav Mokhammad Abdeljawwad".
+#   * `tags`:    List of tags (strings) associated with the entry.
+#   * `summary`: AI‑generated summary text.
+#   * `keywords`: Comma‑separated list of key terms extracted from the content.
+#
+# The template produces a Markdown document that can be viewed in any
+# static‑site generator or plain‑text viewer.
+
+{{!--
+  Tera allows comments using {{!-- ... --}}.  This comment block is here to
+  explain the expected context and keep the file self‑documenting without
+  affecting output.
+--}}
+
+---
+title: "{{ title | default(value="Untitled Entry") }}"
+date: "{{ date | default(value=now(format="%Y-%m-%d")) }}"
+author: "{{ author | default(value="Myroslav Mokhammad Abdeljawwad") }}"
+tags:
+{%- for tag in tags -%}
+  - {{ tag }}
+{%- endfor %}
+keywords: "{{ keywords | join(sep=", ") }}"
+
+---
+
+## Summary
+
+{{ summary | safe }}
+
+{% if tags | length > 0 %}
+### Tags
+- {% for tag in tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}
+{% endif %}
+
+---
